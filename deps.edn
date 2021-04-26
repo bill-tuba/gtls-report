@@ -1,0 +1,18 @@
+{ :paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
+ :aliases
+ {;;:run-api {:main-opts ["-m" "badams.api" "-p" 3000
+  :run-cli {:main-opts ["-m" "badams.cli" "-f" "./resources/test.csv"]}
+  :test    {:extra-paths ["test"]
+            :extra-deps  {lambdaisland/kaocha           {:mvn/version "1.0.829"}
+                          lambdaisland/kaocha-cloverage {:mvn/version "1.0.75"}}}
+
+  :uberjar-cli
+  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.211"}}
+   :exec-fn      hf.depstar/uberjar
+   :exec-args    {:aot        true
+                  :jar        "report-cli-app.jar"
+                  :main-class "badams.cli"
+                  :sync-pom   true}}
+  ;;:uberjar-api....
+  }}
