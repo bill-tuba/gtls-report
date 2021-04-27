@@ -10,15 +10,16 @@
 
 (deftest api-test
   (testing "Not found"
-    (let [handler  (sut/app {:components/repo (atom [])})
+    (let [repo     (repo/atomic-repo)
+          handler  (sut/app {:api.components/repo repo})
           response (handler (mock/request :get "/TILT!"))]
       (is (= 404 (:status response)))))
 
   (testing "GET returns no items with empty state"
     (are [request expected]
-         (let [repo     (repo/atomic-repo)
-               handler  (sut/app {:components/repo (repo/atomic-repo)})
-               response (handler (mock/request :get request))]
+        (let [repo     (repo/atomic-repo)
+              handler  (sut/app {:components/repo repo})
+              response (handler (mock/request :get request))]
            (is (= expected (status+body response))))
 
       "/records/name"      [200 []]
@@ -27,15 +28,15 @@
 
   (testing "POST then GET records"
     (are [post-req get-url expected]
-         (let [[url payload] post-req
-               repo      (repo/atomic-repo)
-               handler   (sut/app {:components/repo (atom [])})
-               post-resp (handler (-> (mock/request :post url)
-                                      (mock/body    payload)))
-               get-resp  (handler (mock/request :get get-url))]
+        (let [[url payload] post-req
+              repo      (repo/atomic-repo)
+              handler   (sut/app {:components/repo repo})
+              post-resp (handler (-> (mock/request :post url)
+                                     (mock/body    payload)))
+              get-resp  (handler (mock/request :get get-url))]
 
-           (and (is (= 201      (:status post-resp)))
-                (is (= expected (status+body get-resp)))))
+          (and (is (= 201      (:status post-resp)))
+               (is (= expected (status+body get-resp)))))
 
       ["/records/" "a,b,c,d,1/2/1970"]
       "/records/name"
@@ -43,4 +44,16 @@
              :FirstName     "b",
              :Email         "c",
              :FavoriteColor "d",
-             :DateOfBirth   "1/2/1970"}]])))
+             :DateOfBirth   "1/2/1970"}]]))
+
+  (testing "POST failure"
+    (let [repo         (repo/atomic-repo)
+          handler      (sut/app {:components/repo repo})
+          post-resp    (handler (-> (mock/request :post "/records/")
+                                (mock/body    "NONSENSE")))
+          get-resp     (handler (mock/request :get "/records/"))]
+
+      (and (is (= [400 {:error "unparseable"}]
+                  (status+body post-resp)))
+           (is (= [200 []]
+                  (status+body get-resp)))))))

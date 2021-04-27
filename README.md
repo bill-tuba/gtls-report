@@ -2,10 +2,6 @@
 
 Report sample homework
 
-## Installation
-
-Download from https://github.com/badams/gtls-report
-
 ## Usage
 
 The project may be executed as a cli application or a 
@@ -25,8 +21,8 @@ Run the project as a api server via `clojure**:
            -f  path to 'csv' input file
                can be comma, space or pipe delimited.
 ### SERVER
-    usage: badams.api
-          -p  open port to start api (defaults to 8081**
+    usage: badams.server
+          -p  open port to start api (defaults to 8081)
 
 ## Examples:
 ### CLI
@@ -44,7 +40,7 @@ Run the project as a api server via `clojure**:
 
     $ ./bin/kaocha
 
-## ... tests+coverage
+### ... tests+coverage
 
     $ ./bin/coverage
     
@@ -60,9 +56,8 @@ Run the project as a api server via `clojure**:
 
     $ java -jar report-server.jar -p 3000
 
-
 ## Examples: (server)
-    POST-ing new records
+    POST record endpoint:
     
     $ \
     for i in 1 2 3 4 5; do
@@ -74,7 +69,7 @@ Run the project as a api server via `clojure**:
     -d "$foo${i},bar,email${i},blue,1/1/200${i}"
     http://localhost:3000/records
     
-   GET-ing records: (assuming jq is installed)
+   GET records endpoints: (assumes `jq` installed)
     
     $ curl http://localhost:3000/records/email     | jq
     ...
@@ -87,3 +82,15 @@ Run the project as a api server via `clojure**:
     
     $ curl http://localhost:3000/OHNOES!
      ;; NOT FOUND
+
+## Assumptions 
+To keep things simple(r) some input checking was excluded:
+`Email` (reg-ex to check Email) or `FavoriteColor`
+(enumeration like ROYGBIV) - The idea is to do some basic checks (like `DateOfBirth`)
+bailing out on that line of input if appropriate.
+
+It was assumed all of the fields are mandatory.
+
+
+POST can return Location Header data but since individually POSTed data is not retrievable
+directly I send back the Location as `/records/unsorted` to get all of the items.

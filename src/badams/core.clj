@@ -1,5 +1,6 @@
 (ns badams.core
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [clojure.set :as set]))
 
 (def ^:private DateFormat "M/d/yyyy")
 
@@ -13,21 +14,29 @@
   ([fmt date-str]
    (.parse (date-formatter) date-str)))
 
-(def Transformations
-  [[:LastName      identity]
-   [:FirstName     identity]
-   [:Email         identity]
-   [:FavoriteColor identity]
-   [:DateOfBirth   (partial date DateFormat)]])
+(def RequiredFields
+  {:LastName      str
+   :FirstName     str
+   :Email         str
+   :FavoriteColor str
+   :DateOfBirth   (partial date DateFormat)})
+
+(defn- assert-required [schema m]
+  (assert (empty? (set/difference (set (keys schema))
+                                  (set (keys m)))))
+  m)
 
 (defn parse
-  ([line] (parse Transformations line))
-  ([t-formations line]
+  ([line] (parse RequiredFields line))
+  ([schema line]
    (letfn [(detail [[k f] v] {k (f v)})]
      (when-not (str/blank? line)
-       (->> (str/split line #"[|,\s]")
-            (map detail t-formations)
-            (into {}))))))
+       (try
+         (->> (str/split line #"[|,\s]")
+              (map detail schema)
+              (into {})
+              (assert-required schema))
+         (catch Throwable _ nil))))))
 
 (defn prepare [details]
   (letfn [(format-date [d] (.format (date-formatter) d))]

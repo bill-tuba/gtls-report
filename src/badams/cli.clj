@@ -31,8 +31,25 @@
        (map core/prepare)
        (show-table! title)))
 
+(defn assert-exists [f]
+  (assert (.exists (io/file f))
+          "File does not exist"))
+
+(defn usage []
+  (println "usage: badams.cli\noptions:\n\t -f path to csv file"))
+
+(defn error [t]
+  (binding [*out* *err*]
+    (usage)
+    (println "\n" (.getMessage t))
+    (System/exit 1)))
+
 (defn -main [& args]
-  (let [file (get (common/options args)  "-f")
-        repo (create-repo! file)]
-    (doseq [v report-views]
-      (show-report! repo v))))
+  (try
+    (let [file (get (common/options args)  "-f")
+          _    (assert-exists file)
+          repo (create-repo! file)]
+      (doseq [v report-views]
+        (show-report! repo v)))
+    (catch Throwable t
+      (error t))))

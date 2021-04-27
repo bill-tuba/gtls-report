@@ -1,21 +1,19 @@
 (ns badams.api
-  (:gen-class)
-  (:require [badams.common :as common]
-            [badams.core :as core]
+  (:require [badams.core :as core]
             [badams.repository :as repo]
             [bidi.ring :refer [make-handler]]
-            [org.httpkit.server :as server]
             [ring.middleware.json :refer [wrap-json-response]]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :as res]))
 
 (defn add-to-repo-handler [{:keys [components/repo body] :as request}]
-  (->> (core/parse (slurp body))
-       (repo/put! repo))
-  (res/created "/records/unsorted"))
+  (if-let [ok (some->> (core/parse (slurp body))
+                       (repo/put! repo))]
+    (res/created "/records")
+    (res/bad-request {:error "unparseable"})))
 
 (def ^:private not-found
-  (constantly (res/not-found "Not Found")))
+  (constantly (res/not-found {:error "Not Found"})))
 
 (defn- sorting-handler [order]
   (fn [{:keys [components/repo] :as request}]
@@ -24,15 +22,15 @@
          res/response)))
 
 (def ^:private handler
+  "Routing to records handlers
+  GET records/ is left unsorted to serve at a Location for POST records/"
   (make-handler
    ["/" [["records/"
           [[:post [["" add-to-repo-handler]]]
+           [:get  [["" (sorting-handler repo/unsorted)]]]
            [:get  [["email"     (sorting-handler repo/by-email-desc-last-name-asc)]
                    ["birthdate" (sorting-handler repo/by-birth-date-asc)]
-                   ["name"      (sorting-handler repo/by-last-name-desc)]
-
-                    ;; POST-ing should have 'location'. ergo this
-                   ["unsorted"  (sorting-handler repo/unsorted)]]]]]
+                   ["name"      (sorting-handler repo/by-last-name-desc)]]]]]
          [true not-found]]]))
 
 (defn- with-components [component-map handler]
@@ -44,23 +42,3 @@
        (with-components components)
        wrap-json-response
        wrap-reload))
-
-(defonce ^:private server
-  (atom nil))
-
-(defn- start-server [port repo]
-  (reset! server
-          (server/run-server (#'app {:components/repo repo})
-                             {:port port})))
-(defn- stop-server []
-  (@server :timeout 100))
-
-(defn -main [& args]
-  (let [port (-> (common/options args)
-                 (get  "-p" "8081")
-                 (#(Integer/parseInt %)))
-        repo (repo/atomic-repo)]
-
-    (start-server port repo)
-    (printf "API listening on port: %s\n" port)
-    (println "\nCtrl-C to exit ....")))

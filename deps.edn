@@ -22,4 +22,4 @@
    :exec-fn      hf.depstar/uberjar
    :exec-args    {:aot        true
                   :jar        "report-server.jar"
-                  :main-class "badams.api"}}}}
+                  :main-class "badams.server"}}}}

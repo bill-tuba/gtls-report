@@ -21,12 +21,20 @@
                        :DateOfBirth   date})
 
 (deftest parse-test
-  (and
-   (is (= nil (sut/parse nil)))
-   (is (= nil (sut/parse "")))
+  (testing "degenerate parsing case"
+    (and (is (= nil (sut/parse nil)))
+         (is (= nil (sut/parse "")))))
 
-   (doseq [line [csv-line space-sv-line pipe-sv-line]]
-     (is (= details (sut/parse line))))))
+  (testing "parsing with different delimiters"
+    (and
+      (is (= details (sut/parse csv-line)))
+      (is (= details (sut/parse space-sv-line)))
+      (is (= details (sut/parse pipe-sv-line)))))
+
+  (testing "parse failure"
+    (and
+      (is (= nil (sut/parse "1,2,3,4,bad-date")))
+      (is (= nil (sut/parse "1"))))))
 
 (deftest prepare-details-test
   (is (= expected-details (sut/prepare details))))
