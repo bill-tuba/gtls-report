@@ -25,16 +25,15 @@
 
 (def ^:private handler
   (make-handler
-    ["/" [
-          ["records/"
-           [[:post [["" add-to-repo-handler]]]
-            [:get  [["email"     (sorting-handler repo/by-email-desc-last-name-asc)]
-                    ["birthdate" (sorting-handler repo/by-birth-date-asc)]
-                    ["name"      (sorting-handler repo/by-last-name-desc)]
+   ["/" [["records/"
+          [[:post [["" add-to-repo-handler]]]
+           [:get  [["email"     (sorting-handler repo/by-email-desc-last-name-asc)]
+                   ["birthdate" (sorting-handler repo/by-birth-date-asc)]
+                   ["name"      (sorting-handler repo/by-last-name-desc)]
 
                     ;; POST-ing should have 'location'. ergo this
-                    ["unsorted"  (sorting-handler repo/unsorted)]]]]]
-          [true not-found]]]))
+                   ["unsorted"  (sorting-handler repo/unsorted)]]]]]
+         [true not-found]]]))
 
 (defn- with-components [component-map handler]
   (fn [request]

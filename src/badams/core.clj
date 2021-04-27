@@ -1,7 +1,5 @@
 (ns badams.core
-  (:require [clojure.string :as str]
-            [clojure.java.io :as io]
-            [clojure.walk :as walk]))
+  (:require [clojure.string :as str]))
 
 (def ^:private DateFormat "M/d/yyyy")
 

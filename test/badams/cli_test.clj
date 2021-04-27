@@ -1,9 +1,9 @@
 (ns badams.cli-test
   (:require [badams.cli :as sut]
-            [clojure.test :refer :all]
-            [badams.repository :as repo]
             [badams.core :as core]
-            [clojure.string :as str]))
+            [badams.repository :as repo]
+            [clojure.string :as str]
+            [clojure.test :refer :all]))
 
 (deftest show-report!-test
   (let [repo (repo/atomic-repo [{:line 1 :DateOfBirth (core/date "1/2/1970")}
@@ -17,7 +17,7 @@
 |    1 |    1/2/1970 |
 |    2 |    1/3/1980 |"
 
-(str/trim (with-out-str (sut/show-report! repo [repo/unsorted "TEST"])))))))
+         (str/trim (with-out-str (sut/show-report! repo [repo/unsorted "TEST"])))))))
 
 (deftest create-repo!-test
   (is (= [{:FirstName "FN"
@@ -25,13 +25,13 @@
            :Email "EM"
            :FavoriteColor "FC"
            :DateOfBirth (core/date "1/1/1970")}]
-        (repo/values (sut/create-repo! "./test/resources/cli_test.csv")))))
+         (repo/values (sut/create-repo! "./test/resources/cli_test.csv")))))
 
 (deftest -main-test
   (let [results
         (str/trim
-          (with-out-str
-            (sut/-main "-f" "./test/resources/cli_int_test.csv")))]
+         (with-out-str
+           (sut/-main "-f" "./test/resources/cli_int_test.csv")))]
     (is (=
 "|\tBy email descending, last name ascending:
 |
@@ -67,4 +67,4 @@
 |      LNB |        FN |   EM4 |            FC |    1/3/1990 |
 |      LN0 |        FN |   EM1 |            FC |    1/1/1960 |
 |       LN |        FN |   EM4 |            FC |    1/3/1990 |"
-           results))))
+         results))))

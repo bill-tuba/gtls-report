@@ -1,4 +1,3 @@
-
 (ns badams.cli
   (:gen-class)
   (:require [badams.common :as common]

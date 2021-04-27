@@ -1,7 +1,6 @@
 (ns badams.core-test
   (:require [badams.core :as sut]
-            [clojure.test :refer :all]
-            [badams.core :as core]))
+            [clojure.test :refer :all]))
 
 (def date "12/12/1979")
 
@@ -11,9 +10,9 @@
               :FavoriteColor "FC"
               :DateOfBirth   (sut/date date)})
 
-(def csv-line "LN,FN,EM,FC,12/12/1979")
-(def spv-line "LN FN EM FC 12/12/1979")
-(def psv-line "LN|FN|EM|FC|12/12/1979")
+(def csv-line      "LN,FN,EM,FC,12/12/1979")
+(def space-sv-line "LN FN EM FC 12/12/1979")
+(def pipe-sv-line  "LN|FN|EM|FC|12/12/1979")
 
 (def expected-details {:LastName      "LN"
                        :FirstName     "FN"
@@ -26,7 +25,7 @@
    (is (= nil (sut/parse nil)))
    (is (= nil (sut/parse "")))
 
-   (doseq [line [csv-line spv-line psv-line]]
+   (doseq [line [csv-line space-sv-line pipe-sv-line]]
      (is (= details (sut/parse line))))))
 
 (deftest prepare-details-test

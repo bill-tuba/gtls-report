@@ -1,11 +1,10 @@
-(ns badams.repository
-  (:require [badams.core :as core]))
+(ns badams.repository)
+
+(declare unsorted)
 
 (defprotocol DetailsRepository
   (-put! [this line])
   (-values [this]))
-
-(declare unsorted)
 
 (defn put! [repo details]
   (-put! repo details))
