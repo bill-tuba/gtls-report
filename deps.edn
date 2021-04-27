@@ -1,18 +1,26 @@
-{ :paths ["src" "resources"]
- :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        bidi/bidi           {:mvn/version "2.1.6"}
+        ring/ring           {:mvn/version "1.9.3"}
+        ring/ring-json      {:mvn/version "0.5.1"}
+        http-kit/http-kit   {:mvn/version "2.5.3"}}
  :aliases
- {;;:run-api {:main-opts ["-m" "badams.api" "-p" 3000
+ {:run-api {:main-opts ["-m" "badams.api" "-p" 3000]}
   :run-cli {:main-opts ["-m" "badams.cli" "-f" "./resources/test.csv"]}
   :test    {:extra-paths ["test"]
             :extra-deps  {lambdaisland/kaocha           {:mvn/version "1.0.829"}
-                          lambdaisland/kaocha-cloverage {:mvn/version "1.0.75"}}}
+                          lambdaisland/kaocha-cloverage {:mvn/version "1.0.75"}
+                          ring/ring-mock                {:mvn/version "0.3.0"}}}
 
   :uberjar-cli
   {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.211"}}
    :exec-fn      hf.depstar/uberjar
    :exec-args    {:aot        true
                   :jar        "report-cli-app.jar"
-                  :main-class "badams.cli"
-                  :sync-pom   true}}
-  ;;:uberjar-api....
-  }}
+                  :main-class "badams.cli"}}
+  :uberjar-api
+  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.211"}}
+   :exec-fn      hf.depstar/uberjar
+   :exec-args    {:aot        true
+                  :jar        "report-api-app.jar"
+                  :main-class "badams.api"}}}}

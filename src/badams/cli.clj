@@ -1,14 +1,13 @@
+
 (ns badams.cli
   (:gen-class)
-  (:require [badams.core :as core]
+  (:require [badams.common :as common]
+            [badams.core :as core]
             [badams.repository :as repo]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [clojure.walk :as walk]))
-
-(defn options [args]
-  (into {} (map vec (partition 2 args))))
 
 (defn create-repo! [resource-path]
   (with-open [rdr (io/reader resource-path)]
@@ -34,7 +33,7 @@
        (show-table! title)))
 
 (defn -main [& args]
-  (let [file (get (options args)  "-f")
+  (let [file (get (common/options args)  "-f")
         repo (create-repo! file)]
     (doseq [v report-views]
       (show-report! repo v))))
