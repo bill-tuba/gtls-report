@@ -9,31 +9,36 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :as res]))
 
-(defn add-details-handler [{:keys [components/repo body] :as request}]
+(defn add-to-repo-handler [{:keys [components/repo body] :as request}]
   (->> (core/parse (slurp body))
        (repo/put! repo))
-  (res/response {:status 201}))
+  (res/created "/records/unsorted"))
 
-(def not-found (constantly (res/response {:status 404})))
+(def ^:private not-found
+  (constantly (res/not-found "Not Found")))
 
-(defn sorting-handler [order]
+(defn- sorting-handler [order]
   (fn [{:keys [components/repo] :as request}]
-    (res/response (repo/values repo {:order order}))))
+    (->> (repo/values repo {:order order})
+         (map core/prepare)
+         res/response)))
 
-(def handler
+(def ^:private handler
   (make-handler
-    ["/" [["records/"
-           [[:post [["" add-details-handler]]]
+    ["/" [
+          ["records/"
+           [[:post [["" add-to-repo-handler]]]
             [:get  [["email"     (sorting-handler repo/by-email-desc-last-name-asc)]
                     ["birthdate" (sorting-handler repo/by-birth-date-asc)]
-                    ["name"      (sorting-handler repo/by-last-name-desc)]]]]]]]))
+                    ["name"      (sorting-handler repo/by-last-name-desc)]
 
-(defonce ^:private server
-  (atom nil))
+                    ;; POST-ing should have 'location'. ergo this
+                    ["unsorted"  (sorting-handler repo/unsorted)]]]]]
+          [true not-found]]]))
 
-(defn with-components [components handler]
+(defn- with-components [component-map handler]
   (fn [request]
-    (handler (merge request components))))
+    (handler (merge request component-map))))
 
 (defn app [components]
   (->> #'handler
@@ -41,16 +46,19 @@
        wrap-json-response
        wrap-reload))
 
-(defn start-server [port repo]
+(defonce ^:private server
+  (atom nil))
+
+(defn- start-server [port repo]
   (reset! server
           (server/run-server (#'app {:components/repo repo})
                              {:port port})))
-(defn stop-server []
+(defn- stop-server []
   (@server :timeout 100))
 
 (defn -main [& args]
   (let [port (-> (common/options args)
-                 (get  "-p" "8000")
+                 (get  "-p" "8081")
                  (#(Integer/parseInt %)))
         repo (repo/atomic-repo)]
 
