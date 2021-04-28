@@ -20,7 +20,8 @@ Run the project as a api server via `clojure**:
     
     $ ./bin/run-cli ./resources/sample.csv ./resources/sample.space-sv ./resources/sample.pipe-sv
     
-### SERVER    
+### SERVER
+
     $ ./bin/run-server 3000
 
 ### Running tests
@@ -44,20 +45,20 @@ Run the project as a api server via `clojure**:
     $ java -jar report-server.jar 3000
 
 ## Examples: (server)
-    POST record endpoint:
-    
+####  POST record endpoint:
+
     $ \
     for i in 1 2 3 4 5; do
-    curl -X POST -H "Content-Type: text/plain" -d "$foo${i},bar,email${i},blue,1/1/200${i}" http://localhost:3000/records/ 
+      curl -X POST -H "Content-Type: text/plain" -d "$foo${i},bar,email${i}@b.c,BLUE,1/1/200${i}" http://localhost:3000/records/ 
     done
+ 
+#### POST some bad data:
+ 
+     $ curl -X POST -H "Content-Type: text/plain" -d "foo,bar,WHUTTHAT,BLUE,1/1/2000" http://localhost:3000/records/
+     ;; {"error": "request-data rejected"}
 
-    for i in 1 2 3 4 5; do 
-    curl -X POST -H "Content-Type: text/plain" 
-    -d "$foo${i},bar,email${i},blue,1/1/200${i}"
-    http://localhost:3000/records
-    
-   GET records endpoints: (assumes `jq` installed)
-    
+####  GET records endpoints: (assumes `jq` installed)
+
     $ curl http://localhost:3000/records/email     | jq
     ...
     
@@ -68,19 +69,15 @@ Run the project as a api server via `clojure**:
     ... 
     
     $ curl http://localhost:3000/OHNOES!
-     ;; NOT FOUND
+     ;; {"error":"Not Found"}
 
 ## Assumptions 
 To keep things simple(r) these programs accept "args" vs "options".
 
-- `Email` validation was made intentionally 'loose' (vs applying a rigorous reg-ex).
-
-- An enumeration like ROYGBIV (all caps) applied to `FavoriteColor` seemed 'good enough' for now.
-
-- `DateOfBirth` is parse-checked but it is know it is possible to 'fool' the parser with garbage data.
-
-- It was also assumed all of the fields are mandatory.
-
-POST can return Location Header data but since individually
-POSTed data is not retrievable directly, the response Location 
-is set to `/records/` to retrieve all of the items (unsorted).
+- `Email` validation is not rigorous a 'reg-ex' is used.
+- `FavoriteColor`: using an enumerations of colors (ROYGBIV) seemed 'good enough' for now.
+- `DateOfBirth` : it is possible to 'fool' the pattern+parser with garbage data.
+- Assumes all input fields are mandatory.
+- POST (per its RFC) can return Location Header data but since individually
+  POSTed data is not retrievable directly, the response Location 
+  is set to `/records/` to retrieve all of the items (unsorted).
