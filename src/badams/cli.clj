@@ -1,6 +1,6 @@
 (ns badams.cli
   (:gen-class)
-  (:require [badams.core :as core]
+  (:require [badams.details :as core]
             [badams.repository :as repo]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]

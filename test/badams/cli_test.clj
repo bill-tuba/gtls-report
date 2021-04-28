@@ -1,13 +1,13 @@
 (ns badams.cli-test
   (:require [badams.cli :as sut]
-            [badams.core :as core]
+            [badams.details :as details]
             [badams.repository :as repo]
             [clojure.string :as str]
             [clojure.test :refer :all]))
 
 (deftest show-report!-test
-  (let [repo (repo/atomic-repo [{:line 1 :DateOfBirth (core/date "1/2/1970")}
-                                {:line 2 :DateOfBirth (core/date "1/3/1980")}])]
+  (let [repo (repo/atomic-repo [{:line 1 :DateOfBirth (details/date "1/2/1970")}
+                                {:line 2 :DateOfBirth (details/date "1/3/1980")}])]
 
     (is (=
 "|	TEST:
@@ -24,7 +24,7 @@
            :LastName "LN"
            :Email "EM"
            :FavoriteColor "BLUE"
-           :DateOfBirth (core/date "1/1/1970")}]
+           :DateOfBirth (details/date "1/1/1970")}]
          (repo/values (sut/populate-repo! ["./test/resources/cli_test.csv"])))))
 
 (deftest -main-test

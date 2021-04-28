@@ -1,5 +1,5 @@
 (ns badams.api
-  (:require [badams.core :as core]
+  (:require [badams.details :as core]
             [badams.repository :as repo]
             [bidi.ring :refer [make-handler]]
             [ring.middleware.json :refer [wrap-json-response]]

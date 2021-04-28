@@ -1,5 +1,5 @@
 (ns badams.repository-test
-  (:require [badams.core :as core]
+  (:require [badams.details :as details]
             [badams.repository :as sut]
             [clojure.test :refer :all]))
 
@@ -19,10 +19,10 @@
            @repo))))
 
 (deftest sort-values-test
-  (let [init-data [{:LastName "C"  :Email "E1" :DateOfBirth (core/date "3/3/2003")}
-                   {:LastName "B1" :Email "E3" :DateOfBirth (core/date "1/1/2001")}
-                   {:LastName "A"  :Email "E2" :DateOfBirth (core/date "1/1/2001")}
-                   {:LastName "B2" :Email "E3" :DateOfBirth (core/date "2/2/2002")}]
+  (let [init-data [{:LastName "C"  :Email "E1" :DateOfBirth (details/date "3/3/2003")}
+                   {:LastName "B1" :Email "E3" :DateOfBirth (details/date "1/1/2001")}
+                   {:LastName "A"  :Email "E2" :DateOfBirth (details/date "1/1/2001")}
+                   {:LastName "B2" :Email "E3" :DateOfBirth (details/date "2/2/2002")}]
 
         repo (sut/atomic-repo init-data)]
 
@@ -36,7 +36,7 @@
             "1/1/2001"
             "2/2/2002"
             "3/3/2003"]
-           (map (comp :DateOfBirth core/format-details)
+           (map (comp :DateOfBirth details/format-details)
                 (sut/values repo {:order sut/by-birth-date-asc}))))
 
     (is (= [["E3" "B1"]

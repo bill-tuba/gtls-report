@@ -1,5 +1,5 @@
-(ns badams.core-test
-  (:require [badams.core :as sut]
+(ns badams.details-test
+  (:require [badams.details :as sut]
             [clojure.test :refer :all]))
 
 (def date "12/12/1979")

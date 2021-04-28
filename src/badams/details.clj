@@ -1,4 +1,4 @@
-(ns badams.core
+(ns badams.details
   (:require [clojure.string :as str]
             [clojure.set :as set]
             [clojure.spec.alpha :as s]))
@@ -32,7 +32,7 @@
   ([fmt date-str]
    (.parse (date-formatter) date-str)))
 
-(defn conform-details [m]
+(defn- conform-details [m]
   (update m :DateOfBirth date))
 
 (defn- validate [schema m]
