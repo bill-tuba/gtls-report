@@ -36,7 +36,7 @@
             "1/1/2001"
             "2/2/2002"
             "3/3/2003"]
-           (map (comp :DateOfBirth core/prepare)
+           (map (comp :DateOfBirth core/format-details)
                 (sut/values repo {:order sut/by-birth-date-asc}))))
 
     (is (= [["E3" "B1"]

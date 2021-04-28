@@ -18,7 +18,7 @@
 (defn- sorting-handler [order]
   (fn [{:keys [components/repo] :as request}]
     (->> (repo/values repo {:order order})
-         (map core/prepare)
+         (map core/format-details)
          res/response)))
 
 (def ^:private handler

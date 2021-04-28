@@ -38,6 +38,6 @@
               (assert-required schema))
          (catch Throwable _ nil))))))
 
-(defn prepare [details]
+(defn format-details [details]
   (letfn [(format-date [d] (.format (date-formatter) d))]
     (update details :DateOfBirth format-date)))

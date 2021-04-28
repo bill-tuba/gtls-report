@@ -1,20 +1,20 @@
 (ns badams.cli
   (:gen-class)
-  (:require [badams.common :as common]
-            [badams.core :as core]
+  (:require [badams.core :as core]
             [badams.repository :as repo]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [clojure.walk :as walk]))
 
-(defn create-repo! [resource-path]
-  (with-open [rdr (io/reader resource-path)]
-    (let [repo (repo/atomic-repo)]
-      (doseq [line (line-seq rdr)]
-        (some->> (core/parse line)
-                 (repo/put!  repo)))
-      repo)))
+(defn populate-repo! [files]
+  (let [repo (repo/atomic-repo)]
+    (doseq [f files]
+      (with-open [rdr (io/reader f)]
+        (doseq [line (line-seq rdr)]
+          (some->> (core/parse line)
+                   (repo/put!  repo)))))
+    repo))
 
 (def report-views
   {repo/by-email-desc-last-name-asc "By email descending, last name ascending"
@@ -28,15 +28,15 @@
 
 (defn show-report! [repo [order title :as view]]
   (->> (repo/values repo {:order order})
-       (map core/prepare)
+       (map core/format-details)
        (show-table! title)))
 
-(defn assert-exists [f]
-  (assert (.exists (io/file f))
-          "File does not exist"))
+(defn assert-exists! [files]
+  (assert (every? #(.exists (io/file %)) files)
+          (format "at least one file:\n %s \n does not exist\n" files)))
 
 (defn usage []
-  (println "usage: badams.cli\noptions:\n\t -f path to csv file"))
+  (println "usage: badams.cli\noptions:\n\t paths to csv files"))
 
 (defn error [t]
   (binding [*out* *err*]
@@ -46,9 +46,9 @@
 
 (defn -main [& args]
   (try
-    (let [file (get (common/options args)  "-f")
-          _    (assert-exists file)
-          repo (create-repo! file)]
+    (let [files args
+          _    (assert-exists! files)
+          repo (populate-repo! files)]
       (doseq [v report-views]
         (show-report! repo v)))
     (catch Throwable t

@@ -9,32 +9,19 @@ standalone api-server
 
 Run the project as a cli application via `clojure`:
 
-    $ ./bin/run-cli <OPTIONS>
+    $ ./bin/run-cli <FILES>
 
 Run the project as a api server via `clojure**:
 
-    $ ./bin/run-server <OPTIONS>
-
-## Options
-### CLI 
-    usage: badams.cli
-           -f  path to 'csv' input file
-               can be comma, space or pipe delimited.
-### SERVER
-    usage: badams.server
-          -p  open port to start api (defaults to 8081)
+    $ ./bin/run-server <PORT>
 
 ## Examples:
 ### CLI
     
-    $ ./bin/run-cli -f ./resources/sample.csv
-    
-    $ ./bin/run-cli -f ./resources/sample.space-sv
-    
-    $ ./bin/run-cli -f ./resources/sample.pipe-sv
+    $ ./bin/run-cli ./resources/sample.csv ./resources/sample.space-sv ./resources/sample.pipe-sv
     
 ### SERVER    
-    $ ./bin/run-server -p 3000
+    $ ./bin/run-server 3000
 
 ### Running tests
 
@@ -48,13 +35,13 @@ Run the project as a api server via `clojure**:
 ### CLI
     
     $ ./bin/build-cli
-    $ java -jar report-cli.jar -f ./resources/sample.csv
+    $ java -jar report-cli.jar ./resources/sample.csv  ...other files etc
     
 ### SERVER
 
     $ ./bin/build-server
 
-    $ java -jar report-server.jar -p 3000
+    $ java -jar report-server.jar 3000
 
 ## Examples: (server)
     POST record endpoint:
@@ -84,7 +71,8 @@ Run the project as a api server via `clojure**:
      ;; NOT FOUND
 
 ## Assumptions 
-To keep things simple(r) some input checking was excluded:
+To keep things simple(r) these programs accept args not "options".
+input checking was excluded:
 `Email` (reg-ex to check Email) or `FavoriteColor`
 (enumeration like ROYGBIV) - The idea is to do some basic checks (like `DateOfBirth`)
 bailing out on that line of input if appropriate.

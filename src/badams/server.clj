@@ -1,7 +1,6 @@
 (ns badams.server
   (:gen-class)
   (:require [badams.api :as api]
-            [badams.common :as common]
             [badams.repository :as repo]
             [org.httpkit.server :as server]))
 
@@ -24,15 +23,19 @@
     (println "\n" (.getMessage t))
     (System/exit 1)))
 
+(def default-port 8081)
+
+(defn port [[port & _]]
+  (if port
+    (Integer/parseInt port)
+    default-port))
+
 (defn -main
   "Main Entry point for the REST (like) api server"
   [& args]
   (try
-    (let [port (-> (common/options args)
-                   (get  "-p" "8081")
-                   (#(Integer/parseInt %)))
+    (let [port (port args)
           repo (repo/atomic-repo)]
-
       (start-server port repo)
       (printf "API listening on port: %s\n" port)
       (println "\nCtrl-C to exit ...."))

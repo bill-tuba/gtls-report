@@ -19,19 +19,19 @@
 
          (str/trim (with-out-str (sut/show-report! repo [repo/unsorted "TEST"])))))))
 
-(deftest create-repo!-test
+(deftest populate-repo!-test
   (is (= [{:FirstName "FN"
            :LastName "LN"
            :Email "EM"
            :FavoriteColor "FC"
            :DateOfBirth (core/date "1/1/1970")}]
-         (repo/values (sut/create-repo! "./test/resources/cli_test.csv")))))
+         (repo/values (sut/populate-repo! ["./test/resources/cli_test.csv"])))))
 
 (deftest -main-test
   (let [results
         (str/trim
          (with-out-str
-           (sut/-main "-f" "./test/resources/cli_int_test.csv")))]
+           (sut/-main "./test/resources/cli_int_test.csv")))]
     (is (=
 "|\tBy email descending, last name ascending:
 |

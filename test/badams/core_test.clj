@@ -37,4 +37,4 @@
       (is (= nil (sut/parse "1"))))))
 
 (deftest prepare-details-test
-  (is (= expected-details (sut/prepare details))))
+  (is (= expected-details (sut/format-details details))))
