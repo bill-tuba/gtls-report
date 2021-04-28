@@ -71,15 +71,15 @@ Run the project as a api server via `clojure**:
      ;; NOT FOUND
 
 ## Assumptions 
-To keep things simple(r) these programs accept args not "options".
-some input checking was excluded - particularly `Email` (or reg-ex to check Email)
+To keep things simple(r) these programs accept "args" vs "options".
 
-An enumeration like ROYGBIV (all caps) seemed 'good enough' for the momemt.
+- `Email` validation was made intentionally 'loose' (vs applying a rigorous reg-ex).
 
-The idea is to do some basic checks (like `DateOfBirth`) and bail out if 
-its invalid.
+- An enumeration like ROYGBIV (all caps) applied to `FavoriteColor` seemed 'good enough' for now.
 
-It was assumed all of the fields are mandatory.
+- `DateOfBirth` is parse-checked but it is know it is possible to 'fool' the parser with garbage data.
+
+- It was also assumed all of the fields are mandatory.
 
 POST can return Location Header data but since individually
 POSTed data is not retrievable directly, the response Location 
