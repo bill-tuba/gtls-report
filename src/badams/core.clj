@@ -1,6 +1,24 @@
 (ns badams.core
   (:require [clojure.string :as str]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [clojure.spec.alpha :as s]))
+
+(s/def ::LastName      (s/and string? not-empty))
+(s/def ::FirstName     (s/and string? not-empty))
+(s/def ::Email         (s/and string? not-empty))
+(s/def ::FavoriteColor #{"RED" "ORANGE" "YELLOW"
+                         "GREEN" "BLUE" "INDIGO" "VIOLET"})
+(s/def ::DateOfBirth   inst?)
+
+(s/def ::details
+  (s/keys :req-un
+          [::LastName
+           ::FirstName
+           ::Email
+           ::FavoriteColor
+           ::DateOfBirth]))
+
+(def fields (map (comp keyword name) (last (s/describe ::details))))
 
 (def ^:private DateFormat "M/d/yyyy")
 
@@ -14,29 +32,20 @@
   ([fmt date-str]
    (.parse (date-formatter) date-str)))
 
-(def RequiredFields
-  {:LastName      str
-   :FirstName     str
-   :Email         str
-   :FavoriteColor str
-   :DateOfBirth   (partial date DateFormat)})
+(defn conform-details [m]
+  (update m :DateOfBirth date))
 
-(defn- assert-required [schema m]
-  (assert (empty? (set/difference (set (keys schema))
-                                  (set (keys m)))))
-  m)
+(defn- validate [schema m]
+  (when (s/valid? schema m)
+    m))
 
-(defn parse
-  ([line] (parse RequiredFields line))
-  ([schema line]
-   (letfn [(detail [[k f] v] {k (f v)})]
-     (when-not (str/blank? line)
-       (try
-         (->> (str/split line #"[|,\s]")
-              (map detail schema)
-              (into {})
-              (assert-required schema))
-         (catch Throwable _ nil))))))
+(defn parse [line]
+  (try
+    (->> (str/split line #"[|,\s]")
+         (zipmap fields)
+         (conform-details)
+         (validate ::details))
+    (catch Throwable _ nil)))
 
 (defn format-details [details]
   (letfn [(format-date [d] (.format (date-formatter) d))]

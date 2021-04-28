@@ -38,12 +38,12 @@
           (and (is (= 201      (:status post-resp)))
                (is (= expected (status+body get-resp)))))
 
-      ["/records/" "a,b,c,d,1/2/1970"]
+      ["/records/" "a,b,c,GREEN,1/2/1970"]
       "/records/name"
       [200 [{:LastName      "a",
              :FirstName     "b",
              :Email         "c",
-             :FavoriteColor "d",
+             :FavoriteColor "GREEN",
              :DateOfBirth   "1/2/1970"}]]))
 
   (testing "POST failure"
