@@ -72,13 +72,15 @@ Run the project as a api server via `clojure**:
 
 ## Assumptions 
 To keep things simple(r) these programs accept args not "options".
-input checking was excluded:
-`Email` (reg-ex to check Email) or `FavoriteColor`
-(enumeration like ROYGBIV) - The idea is to do some basic checks (like `DateOfBirth`)
-bailing out on that line of input if appropriate.
+some input checking was excluded - particularly `Email` (or reg-ex to check Email)
+
+An enumeration like ROYGBIV (all caps) seemed 'good enough' for the momemt.
+
+The idea is to do some basic checks (like `DateOfBirth`) and bail out if 
+its invalid.
 
 It was assumed all of the fields are mandatory.
 
-
-POST can return Location Header data but since individually POSTed data is not retrievable
-directly I send back the Location as `/records/unsorted` to get all of the items.
+POST can return Location Header data but since individually
+POSTed data is not retrievable directly, the response Location 
+is set to `/records/` to retrieve all of the items (unsorted).

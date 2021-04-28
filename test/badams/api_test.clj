@@ -53,7 +53,7 @@
                                 (mock/body    "NONSENSE")))
           get-resp     (handler (mock/request :get "/records/"))]
 
-      (and (is (= [400 {:error "unparseable"}]
+      (and (is (= [400 {:error "request-data rejected"}]
                   (status+body post-resp)))
            (is (= [200 []]
                   (status+body get-resp)))))))

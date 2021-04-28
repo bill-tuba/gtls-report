@@ -10,7 +10,7 @@
   (if-let [ok (some->> (core/parse (slurp body))
                        (repo/put! repo))]
     (res/created "/records")
-    (res/bad-request {:error "unparseable"})))
+    (res/bad-request {:error "request-data rejected"})))
 
 (def ^:private not-found
   (constantly (res/not-found {:error "Not Found"})))
