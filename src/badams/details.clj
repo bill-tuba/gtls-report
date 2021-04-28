@@ -3,9 +3,14 @@
             [clojure.set :as set]
             [clojure.spec.alpha :as s]))
 
+(defn- email?
+  "Ripped off from https://ihateregex.io/expr/email/"
+  [s]
+  (re-matches #"[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" s))
+
 (s/def ::LastName      (s/and string? not-empty))
 (s/def ::FirstName     (s/and string? not-empty))
-(s/def ::Email         (s/and string? not-empty))
+(s/def ::Email         email?)
 (s/def ::FavoriteColor #{"RED" "ORANGE" "YELLOW"
                          "GREEN" "BLUE" "INDIGO" "VIOLET"})
 (s/def ::DateOfBirth   inst?)

@@ -2,35 +2,38 @@
 
 |	By email descending, last name ascending:
 |
-| LastName | FirstName | Email | FavoriteColor | DateOfBirth |
-|----------+-----------+-------+---------------+-------------|
-|       LN |        FN |   EM4 |          BLUE |    1/3/1990 |
-|      LNB |        FN |   EM4 |          BLUE |    1/3/1990 |
-|      LND |        FN |   EM4 |          BLUE |    1/3/1990 |
-|      LNB |        FN |   EM3 |          BLUE |    1/1/1980 |
-|      LNC |        FN |   EM2 |          BLUE |    1/5/2000 |
-|      LN0 |        FN |   EM1 |          BLUE |    1/1/1960 |
+| LastName | FirstName |  Email | FavoriteColor | DateOfBirth |
+|----------+-----------+--------+---------------+-------------|
+|       LN |        FN | a@b.c5 |          BLUE |    1/3/1990 |
+|       LN |        FN | a@b.c4 |         GREEN |    1/3/1990 |
+|      LNB |        FN | a@b.c4 |        ORANGE |    1/3/1990 |
+|      LND |        FN | a@b.c4 |        INDIGO |    1/3/1990 |
+|      LNB |        FN | a@b.c3 |        YELLOW |    1/1/1980 |
+|      LNC |        FN | a@b.c2 |        VIOLET |    1/5/2000 |
+|      LN0 |        FN | a@b.c1 |           RED |    1/1/1960 |
                        
 
 |	By birth date ascending:
 |
-| LastName | FirstName | Email | FavoriteColor | DateOfBirth |
-|----------+-----------+-------+---------------+-------------|
-|      LN0 |        FN |   EM1 |          BLUE |    1/1/1960 |
-|      LNB |        FN |   EM3 |          BLUE |    1/1/1980 |
-|      LNB |        FN |   EM4 |          BLUE |    1/3/1990 |
-|       LN |        FN |   EM4 |          BLUE |    1/3/1990 |
-|      LND |        FN |   EM4 |          BLUE |    1/3/1990 |
-|      LNC |        FN |   EM2 |          BLUE |    1/5/2000 |
+| LastName | FirstName |  Email | FavoriteColor | DateOfBirth |
+|----------+-----------+--------+---------------+-------------|
+|      LN0 |        FN | a@b.c1 |           RED |    1/1/1960 |
+|      LNB |        FN | a@b.c3 |        YELLOW |    1/1/1980 |
+|      LNB |        FN | a@b.c4 |        ORANGE |    1/3/1990 |
+|       LN |        FN | a@b.c4 |         GREEN |    1/3/1990 |
+|       LN |        FN | a@b.c5 |          BLUE |    1/3/1990 |
+|      LND |        FN | a@b.c4 |        INDIGO |    1/3/1990 |
+|      LNC |        FN | a@b.c2 |        VIOLET |    1/5/2000 |
                        
 
 |	By last name descending:
 |
-| LastName | FirstName | Email | FavoriteColor | DateOfBirth |
-|----------+-----------+-------+---------------+-------------|
-|      LND |        FN |   EM4 |          BLUE |    1/3/1990 |
-|      LNC |        FN |   EM2 |          BLUE |    1/5/2000 |
-|      LNB |        FN |   EM3 |          BLUE |    1/1/1980 |
-|      LNB |        FN |   EM4 |          BLUE |    1/3/1990 |
-|      LN0 |        FN |   EM1 |          BLUE |    1/1/1960 |
-|       LN |        FN |   EM4 |          BLUE |    1/3/1990 |
+| LastName | FirstName |  Email | FavoriteColor | DateOfBirth |
+|----------+-----------+--------+---------------+-------------|
+|      LND |        FN | a@b.c4 |        INDIGO |    1/3/1990 |
+|      LNC |        FN | a@b.c2 |        VIOLET |    1/5/2000 |
+|      LNB |        FN | a@b.c4 |        ORANGE |    1/3/1990 |
+|      LNB |        FN | a@b.c3 |        YELLOW |    1/1/1980 |
+|      LN0 |        FN | a@b.c1 |           RED |    1/1/1960 |
+|       LN |        FN | a@b.c4 |         GREEN |    1/3/1990 |
+|       LN |        FN | a@b.c5 |          BLUE |    1/3/1990 |

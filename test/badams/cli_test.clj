@@ -22,7 +22,7 @@
 (deftest populate-repo!-test
   (is (= [{:FirstName "FN"
            :LastName "LN"
-           :Email "EM"
+           :Email "a@b.c"
            :FavoriteColor "BLUE"
            :DateOfBirth (details/date "1/1/1970")}]
          (repo/values (sut/populate-repo! ["./test/resources/cli_test.csv"])))))
